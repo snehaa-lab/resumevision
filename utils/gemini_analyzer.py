@@ -125,6 +125,12 @@ def _generate_with_retry(client, prompt):
         response_mime_type="application/json",
         response_schema=_RESPONSE_SCHEMA,
         max_output_tokens=8192,
+        # The SDK's own exponential retries can stall for minutes on 503s.
+        # Our fallback chain below handles retries faster and more transparently.
+        http_options=types.HttpOptions(
+            timeout=90000,  # milliseconds (90s cap per model)
+            retry_options=types.HttpRetryOptions(attempts=1),
+        ),
     )
     candidates = [DEFAULT_MODEL] + [m for m in _FALLBACK_MODELS if m != DEFAULT_MODEL]
     errors = []
