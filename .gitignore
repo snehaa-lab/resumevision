@@ -1,0 +1,19 @@
+# Secrets — never commit
+.env
+
+# Virtual environments
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Duplicate extracted copy of the project
+resumevision-main/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

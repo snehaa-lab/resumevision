@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Resume Analyzer — Your career, refined</title>
+<meta name="description" content="Upload your resume, add the job you're dreaming of, and discover how well the two align. ATS score, skill map, keyword gaps and interview prep." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23FAF7F0'/%3E%3Cg fill='%23E85B45'%3E%3Cellipse cx='16' cy='9' rx='3.4' ry='5.4'/%3E%3Cellipse cx='16' cy='23' rx='3.4' ry='5.4'/%3E%3Cellipse cx='9' cy='16' rx='5.4' ry='3.4'/%3E%3Cellipse cx='23' cy='16' rx='5.4' ry='3.4'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='3.6' fill='%23F2D98D'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body id="top">
+
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ======================= NAV ======================= -->
+<header class="nav" id="site-nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="AI Resume Analyzer — home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+          <g fill="currentColor">
+            <ellipse cx="16" cy="8.5" rx="3.2" ry="5.6"/>
+            <ellipse cx="16" cy="23.5" rx="3.2" ry="5.6"/>
+            <ellipse cx="8.5" cy="16" rx="5.6" ry="3.2"/>
+            <ellipse cx="23.5" cy="16" rx="5.6" ry="3.2"/>
+          </g>
+          <circle cx="16" cy="16" r="3.4" fill="#F2D98D"/>
+        </svg>
+      </span>
+      <span class="brand-name">AI Resume <em>Analyzer</em></span>
+    </a>
+
+    <nav class="nav-links" id="nav-menu" aria-label="Primary">
+      <a href="#top" class="nav-link">Home</a>
+      <a href="#how-it-works" class="nav-link">How it works</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#analyze" class="btn btn-small btn-ink nav-cta">Analyze resume</a>
+    </nav>
+
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle menu">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <div class="hero-copy">
+      <p class="eyebrow reveal">Your career, refined</p>
+      <h1 class="hero-title reveal" style="--d:.08s">
+        Your resume deserves<br />
+        a little more<br />
+        <em>main character energy.</em>
+      </h1>
+      <p class="hero-sub reveal" style="--d:.16s">
+        Upload your resume, add the job you're dreaming of, and discover
+        how well the two align.
+      </p>
+      <div class="hero-actions reveal" style="--d:.24s">
+        <a href="#analyze" class="btn btn-primary">
+          <span>Analyze my resume</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="#how-it-works" class="hero-secondary">See how it works <span aria-hidden="true">↓</span></a>
+      </div>
+      <ul class="hero-meta reveal" style="--d:.32s">
+        <li>PDF · DOCX · TXT</li>
+        <li>No sign-up</li>
+        <li>Report in seconds</li>
+      </ul>
+    </div>
+
+    <div class="hero-visual reveal" style="--d:.2s" id="hero-visual" aria-hidden="true">
+      <div class="hv-blob"></div>
+      <div class="hv-orbit"></div>
+
+      <div class="hv-paper" id="hv-paper">
+        <div class="paper-head">
+          <span class="paper-avatar"></span>
+          <span class="paper-id">
+            <span class="paper-name">Alex Morgan</span>
+            <span class="paper-role">Product Designer</span>
+          </span>
+        </div>
+        <div class="paper-rule"></div>
+        <span class="paper-label">Experience</span>
+        <div class="paper-lines">
+          <i style="--w:92%"></i><i style="--w:78%"></i><i style="--w:85%"></i>
+        </div>
+        <span class="paper-label">Education</span>
+        <div class="paper-lines">
+          <i style="--w:64%"></i><i style="--w:71%"></i>
+        </div>
+        <div class="paper-chips">
+          <span>Figma</span><span>Research</span><span>Prototyping</span>
+        </div>
+      </div>
+
+      <div class="hv-sticker">
+        <span class="hv-sticker-num">92</span>
+        <span class="hv-sticker-sub">/ 100</span>
+      </div>
+
+      <div class="hv-tag hv-tag-a">ATS-friendly <b>✓</b></div>
+      <div class="hv-tag hv-tag-b">3 keywords to add</div>
+
+      <div class="hv-badge">
+        <svg viewBox="0 0 100 100" class="hv-badge-spin">
+          <defs><path id="badge-circle" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"/></defs>
+          <text><textPath href="#badge-circle">resume · review · refine · repeat ·&#160;</textPath></text>
+        </svg>
+        <span class="hv-badge-core">✳</span>
+      </div>
+
+      <svg class="hv-arrow" viewBox="0 0 90 60" fill="none">
+        <path d="M4 8 C 30 40, 55 46, 82 34" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 7"/>
+        <path d="M74 28 L 84 33 L 76 41" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+
+      <svg class="hv-flower" viewBox="0 0 40 40" fill="none">
+        <g fill="#F1A18D">
+          <ellipse cx="20" cy="10" rx="4" ry="7.5"/>
+          <ellipse cx="20" cy="30" rx="4" ry="7.5"/>
+          <ellipse cx="10" cy="20" rx="7.5" ry="4"/>
+          <ellipse cx="30" cy="20" rx="7.5" ry="4"/>
+        </g>
+        <circle cx="20" cy="20" r="4.5" fill="#F2D98D"/>
+      </svg>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================= TICKER ======================= -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>ATS score <i>✳</i> Skill map <i>✳</i> Keyword gaps <i>✳</i> Section review <i>✳</i> Interview prep <i>✳</i> Honest feedback <i>✳</i>&nbsp;</span>
+    <span>ATS score <i>✳</i> Skill map <i>✳</i> Keyword gaps <i>✳</i> Section review <i>✳</i> Interview prep <i>✳</i> Honest feedback <i>✳</i>&nbsp;</span>
+  </div>
+</div>
+
+<!-- ======================= HOW IT WORKS ======================= -->
+<section class="how" id="how-it-works">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <p class="eyebrow">The process</p>
+      <h2 class="section-title">Three small steps,<br /><em>one clearer picture.</em></h2>
+    </div>
+
+    <div class="steps">
+      <article class="step reveal" style="--d:.05s">
+        <span class="step-num">01</span>
+        <div class="step-doodle" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none">
+            <rect x="16" y="8" width="32" height="44" rx="3" stroke="currentColor" stroke-width="2"/>
+            <path d="M23 20h18M23 27h18M23 34h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M32 58V44M32 44l-6 6M32 44l6 6" stroke="#E85B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Upload your resume</h3>
+        <p>Drop in your PDF or DOCX — TXT works too. We read it the way a parser would.</p>
+      </article>
+
+      <article class="step step-offset reveal" style="--d:.15s">
+        <span class="step-num">02</span>
+        <div class="step-doodle" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none">
+            <rect x="10" y="20" width="44" height="30" rx="3" stroke="currentColor" stroke-width="2"/>
+            <path d="M24 20v-4a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v4" stroke="currentColor" stroke-width="2"/>
+            <circle cx="32" cy="35" r="7" stroke="#E85B45" stroke-width="2"/>
+            <circle cx="32" cy="35" r="2.4" fill="#E85B45"/>
+          </svg>
+        </div>
+        <h3>Add your dream job</h3>
+        <p>Paste the job description you're aiming for. Optional, but it sharpens everything.</p>
+      </article>
+
+      <article class="step reveal" style="--d:.25s">
+        <span class="step-num">03</span>
+        <div class="step-doodle" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none">
+            <path d="M10 52h44" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M16 52V38M28 52V30M40 52V22M52 52V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M52 6l1.8 3.7L57.5 11l-3.7 1.8L52 16.5l-1.8-3.7L46.5 11l3.7-1.3L52 6z" fill="#F2D98D"/>
+          </svg>
+        </div>
+        <h3>Get your insights</h3>
+        <p>Discover your match, missing skills, and the small fixes that make a big difference.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ANALYZER ======================= -->
+<section class="analyzer" id="analyze">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <p class="eyebrow">The analysis</p>
+      <h2 class="section-title">Let's read <em>your resume.</em></h2>
+      <p class="section-sub">Two steps. One honest report. Nothing stored afterwards.</p>
+    </div>
+
+    <!-- Intake form -->
+    <div class="intake-wrap reveal" id="intake-wrap">
+      <form id="analyze-form" class="intake" novalidate>
+
+        <!-- STEP 01 -->
+        <div class="step-card">
+          <div class="step-card-head">
+            <span class="step-chip">Step 01</span>
+            <div>
+              <h3 class="step-card-title">Your resume</h3>
+              <p class="step-card-sub">PDF, DOCX or TXT · up to 8 MB</p>
+            </div>
+          </div>
+
+          <label class="dropzone" id="dropzone" for="resume-file">
+            <input type="file" id="resume-file" name="resume" accept=".pdf,.docx,.txt" hidden />
+
+            <div class="dz-empty" id="dz-empty">
+              <span class="dz-doc" aria-hidden="true">
+                <svg viewBox="0 0 48 56" fill="none">
+                  <path d="M6 4h26l10 10v38H6V4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M32 4v10h10" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M13 24h22M13 31h22M13 38h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="dz-title">Drop your resume here</span>
+              <span class="dz-or">or</span>
+              <span class="btn btn-ghost dz-browse">Browse files</span>
+              <span class="dz-formats"><b>PDF</b><b>DOCX</b><b>TXT</b></span>
+            </div>
+
+            <div class="dz-file hidden" id="dz-file">
+              <span class="dz-file-icon" id="file-kind" aria-hidden="true">PDF</span>
+              <span class="dz-file-meta">
+                <span class="dz-file-name" id="file-name"></span>
+                <span class="dz-file-size" id="file-size"></span>
+              </span>
+              <span class="dz-file-ok" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4L16 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </label>
+
+          <div class="dz-actions hidden" id="dz-actions">
+            <button type="button" class="link-btn" id="file-replace">Replace file</button>
+            <span class="dz-actions-dot" aria-hidden="true">·</span>
+            <button type="button" class="link-btn link-btn-danger" id="file-remove">Remove</button>
+          </div>
+
+          <p class="dz-error hidden" id="dz-error" role="alert"></p>
+        </div>
+
+        <!-- STEP 02 -->
+        <div class="step-card step-jd locked" id="step-jd">
+          <div class="step-card-head">
+            <span class="step-chip step-chip-alt">Step 02</span>
+            <div>
+              <h3 class="step-card-title">The job description <span class="optional-tag">Optional</span></h3>
+              <p class="step-card-sub">Paste the role you want to be matched against.</p>
+            </div>
+          </div>
+
+          <div class="jd-lock-note" id="jd-lock-note">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8"/></svg>
+            Upload your resume first — this step unlocks right after.
+          </div>
+
+          <div class="jd-body">
+            <textarea id="job-description" name="job_description" disabled
+              placeholder="Paste the job description here. Let's see how your resume matches what they're looking for..."></textarea>
+            <div class="jd-foot">
+              <span class="jd-hint">Tip: the full posting works best — requirements, responsibilities, everything.</span>
+              <span class="jd-count" id="jd-count">0 characters</span>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn btn-primary btn-analyze" disabled>
+          <span class="btn-label">Analyze my resume</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </button>
+
+        <p class="intake-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 7.5-7 10-4-2.5-7-5-7-10V6l7-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          Processed for this analysis only — the temporary file is deleted right after.
+        </p>
+      </form>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-panel hidden" id="loading-panel" role="status" aria-live="polite">
+      <div class="load-doc" aria-hidden="true">
+        <svg viewBox="0 0 48 56" fill="none">
+          <path d="M6 4h26l10 10v38H6V4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M32 4v10h10" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M13 24h22M13 31h22M13 38h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="load-scan"></span>
+      </div>
+
+      <h3 class="load-title">Reading your resume<em>…</em></h3>
+      <p class="load-sub">This usually takes a few seconds. Here's what the analyzer is working through:</p>
+
+      <ol class="load-stages" id="load-stages">
+        <li><span class="ls-num">01</span> Reading your resume</li>
+        <li><span class="ls-num">02</span> Finding your skills</li>
+        <li><span class="ls-num">03</span> Comparing job requirements</li>
+        <li><span class="ls-num">04</span> Calculating your match</li>
+        <li><span class="ls-num">05</span> Preparing your report</li>
+      </ol>
+
+      <div class="load-progress" aria-hidden="true"><span></span></div>
+      <p class="load-foot">
+        <span id="load-elapsed">0:00</span> elapsed · stages illustrate the process — your report appears the moment it's ready.
+      </p>
+    </div>
+
+    <!-- Error -->
+    <div class="error-panel hidden" id="error-panel" role="alert">
+      <span class="error-mark" aria-hidden="true">!</span>
+      <h3>That didn't quite work</h3>
+      <p id="error-message"></p>
+      <button type="button" class="btn btn-ink" id="error-retry">Try again</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================= RESULTS ======================= -->
+<section class="results hidden" id="results">
+  <div class="section-inner">
+
+    <div class="report-head">
+      <div>
+        <p class="eyebrow">The report</p>
+        <h2 class="report-name" id="candidate-name">Candidate</h2>
+        <div class="report-tags">
+          <span class="level-badge" id="experience-level"></span>
+          <span class="report-date" id="report-date"></span>
+        </div>
+      </div>
+      <button type="button" class="btn btn-ghost" id="new-analysis">
+        <span aria-hidden="true">↺</span> New analysis
+      </button>
+    </div>
+
+    <p class="targeted-ribbon hidden" id="targeted-ribbon">
+      <span aria-hidden="true">◎</span> Targeted review — this report was scored against the job description you provided.
+    </p>
+
+    <!-- Score spread -->
+    <div class="score-spread">
+      <div class="score-ring-wrap">
+        <svg viewBox="0 0 200 200" class="score-ring" aria-hidden="true">
+          <circle cx="100" cy="100" r="84" class="ring-track" />
+          <circle cx="100" cy="100" r="84" class="ring-fill" id="score-ring-fill" pathLength="100" />
+        </svg>
+        <div class="score-readout">
+          <span class="score-number" id="score-number">0</span>
+          <span class="score-max">out of 100</span>
+        </div>
+      </div>
+      <div class="score-story">
+        <p class="eyebrow">ATS score</p>
+        <p class="score-verdict" id="score-verdict"></p>
+        <p class="score-reasoning" id="score-reasoning"></p>
+      </div>
+    </div>
+
+    <!-- Summary pull-quote -->
+    <blockquote class="summary-quote">
+      <p class="eyebrow">The overall read</p>
+      <p id="overall-summary"></p>
+    </blockquote>
+
+    <!-- Skills + strengths -->
+    <div class="report-duo">
+      <article class="report-block">
+        <header class="block-head"><span class="block-num">01</span><h3>What you bring</h3></header>
+        <div class="skill-block">
+          <p class="skill-group-label">Technical</p>
+          <div class="tag-row" id="skills-technical"></div>
+        </div>
+        <div class="skill-block">
+          <p class="skill-group-label">Tools &amp; technologies</p>
+          <div class="tag-row" id="skills-tools"></div>
+        </div>
+        <div class="skill-block">
+          <p class="skill-group-label">Soft skills</p>
+          <div class="tag-row" id="skills-soft"></div>
+        </div>
+      </article>
+
+      <article class="report-block block-tinted">
+        <header class="block-head"><span class="block-num">02</span><h3>Your strengths</h3></header>
+        <ul class="strength-list" id="strengths-list"></ul>
+      </article>
+    </div>
+
+    <!-- Section coverage -->
+    <article class="report-block">
+      <header class="block-head"><span class="block-num">03</span><h3>Section coverage</h3></header>
+      <div class="coverage-cols">
+        <div>
+          <p class="coverage-label good">Present</p>
+          <ul class="plain-list" id="sections-found"></ul>
+        </div>
+        <div>
+          <p class="coverage-label bad">Missing</p>
+          <ul class="plain-list" id="sections-missing"></ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Keyword gaps -->
+    <article class="report-block">
+      <header class="block-head"><span class="block-num">04</span><h3>Missing keywords</h3></header>
+      <p class="block-sub" id="gaps-sub">Terms the role asks for that your resume doesn't mention yet.</p>
+      <div class="tag-row" id="keyword-gaps"></div>
+    </article>
+
+    <!-- Weak sections -->
+    <article class="report-block">
+      <header class="block-head"><span class="block-num">05</span><h3>Where to grow</h3></header>
+      <p class="block-sub">Small, fixable things — each one comes with a way forward.</p>
+      <div id="weak-sections" class="weak-list"></div>
+    </article>
+
+    <!-- Suggestions -->
+    <article class="report-block">
+      <header class="block-head"><span class="block-num">06</span><h3>The reviewer's notes</h3></header>
+      <ol class="suggestion-list" id="suggestions-list"></ol>
+    </article>
+
+    <!-- Interview questions -->
+    <article class="report-block">
+      <header class="block-head"><span class="block-num">07</span><h3>Interview rehearsal</h3></header>
+      <p class="block-sub">Questions you're likely to face — practice out loud, not just in your head.</p>
+      <div class="tabs" id="question-tabs" role="tablist" aria-label="Interview question categories">
+        <button class="tab-btn active" data-tab="technical" role="tab" aria-selected="true">Technical</button>
+        <button class="tab-btn" data-tab="behavioral" role="tab" aria-selected="false">Behavioral</button>
+        <button class="tab-btn" data-tab="role_specific" role="tab" aria-selected="false">Role-specific</button>
+      </div>
+      <ol class="question-list" id="questions-technical" role="tabpanel"></ol>
+      <ol class="question-list hidden" id="questions-behavioral" role="tabpanel"></ol>
+      <ol class="question-list hidden" id="questions-role_specific" role="tabpanel"></ol>
+    </article>
+
+    <div class="report-foot">
+      <p>That's the full picture. Small edits, applied honestly, move this score more than you'd think.</p>
+      <button type="button" class="btn btn-primary" id="new-analysis-2">
+        <span>Analyze another resume</span><span class="btn-arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================= PRIVACY + ABOUT ======================= -->
+<section class="privacy" id="privacy">
+  <div class="section-inner privacy-inner">
+    <div class="privacy-copy reveal">
+      <p class="eyebrow">A quiet promise</p>
+      <h2 class="section-title">Your resume is personal.<br /><em>Your analysis is temporary.</em></h2>
+      <ul class="privacy-list">
+        <li>
+          <b>Read once, then deleted.</b>
+          The temporary copy of your file is removed as soon as your report is generated.
+        </li>
+        <li>
+          <b>AI does the reading.</b>
+          To produce the analysis, your resume text is sent to Google's Gemini API — Google's own data policies apply to that processing.
+        </li>
+        <li>
+          <b>No accounts, no history.</b>
+          This app keeps no database of uploads and no record of your reports.
+        </li>
+        <li>
+          <b>Share thoughtfully.</b>
+          Avoid uploading details you wouldn't want processed by a third-party AI service.
+        </li>
+      </ul>
+    </div>
+    <div class="privacy-art reveal" style="--d:.15s" aria-hidden="true">
+      <div class="pa-card">
+        <svg viewBox="0 0 48 56" fill="none">
+          <path d="M6 4h26l10 10v38H6V4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M32 4v10h10" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M13 22h22M13 29h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="pa-lock">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8"/></svg>
+        </span>
+      </div>
+      <span class="pa-note">handled with care</span>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="section-inner about-inner reveal">
+    <p class="eyebrow">About this tool</p>
+    <p class="about-text">
+      AI Resume Analyzer is an MCA project built with <em>Flask</em> and <em>Google Gemini</em>.
+      It reads PDF, DOCX and TXT resumes, scores them the way an applicant tracking system would,
+      and turns the findings into a practical, human-readable career review —
+      no dashboards full of noise, just the things worth fixing.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+          <g fill="currentColor">
+            <ellipse cx="16" cy="8.5" rx="3.2" ry="5.6"/>
+            <ellipse cx="16" cy="23.5" rx="3.2" ry="5.6"/>
+            <ellipse cx="8.5" cy="16" rx="5.6" ry="3.2"/>
+            <ellipse cx="23.5" cy="16" rx="5.6" ry="3.2"/>
+          </g>
+          <circle cx="16" cy="16" r="3.4" fill="#F2D98D"/>
+        </svg>
+      </span>
+      <div>
+        <p class="footer-name">AI Resume Analyzer</p>
+        <p class="footer-tag">Your career, refined.</p>
+      </div>
+    </div>
+    <nav class="footer-links" aria-label="Footer">
+      <a href="#top">Home</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#analyze">Analyze</a>
+      <a href="#privacy">Privacy</a>
+    </nav>
+    <p class="footer-copy">© <span id="year">2026</span> AI Resume Analyzer · An MCA project</p>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
