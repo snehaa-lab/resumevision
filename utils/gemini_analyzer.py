@@ -119,19 +119,24 @@ def _get_client():
 
 def _generate_with_retry(client, prompt):
     """Generate content, falling back between models on transient capacity errors."""
-    config = types.GenerateContentConfig(
+    config_kwargs = dict(
         system_instruction=_SYSTEM_INSTRUCTION,
         temperature=0.4,
         response_mime_type="application/json",
         response_schema=_RESPONSE_SCHEMA,
         max_output_tokens=8192,
-        # The SDK's own exponential retries can stall for minutes on 503s.
-        # Our fallback chain below handles retries faster and more transparently.
-        http_options=types.HttpOptions(
-            timeout=90000,  # milliseconds (90s cap per model)
-            retry_options=types.HttpRetryOptions(attempts=1),
-        ),
     )
+    # Cap per-model latency and disable the SDK's own slow exponential retries;
+    # our fallback chain handles retries faster. Guard for older SDK versions.
+    try:
+        if hasattr(types, "HttpOptions"):
+            options = {"timeout": 90000}  # milliseconds
+            if hasattr(types, "HttpRetryOptions"):
+                options["retry_options"] = types.HttpRetryOptions(attempts=1)
+            config_kwargs["http_options"] = types.HttpOptions(**options)
+    except Exception:
+        pass  # unsupported option on this SDK version — continue without it
+    config = types.GenerateContentConfig(**config_kwargs)
     candidates = [DEFAULT_MODEL] + [m for m in _FALLBACK_MODELS if m != DEFAULT_MODEL]
     errors = []
 
