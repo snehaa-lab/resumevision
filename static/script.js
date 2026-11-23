@@ -216,6 +216,14 @@
     loadingPanel.classList.remove("hidden");
   }
   function showError(msg) {
+    // Translate raw API errors into something a job seeker can act on.
+    if (/high demand|503|UNAVAILABLE/i.test(msg)) {
+      msg = "Google's Gemini API is busy right now (high demand). Nothing is wrong with your resume — please wait a couple of minutes and press Try again.";
+    } else if (/GEMINI_API_KEY is not set/i.test(msg)) {
+      msg = "The API key isn't configured on the server. Add GEMINI_API_KEY to your Render environment variables and redeploy.";
+    } else if (/429|RESOURCE_EXHAUSTED|quota/i.test(msg)) {
+      msg = "The API's free-tier quota is exhausted for now. Please try again later or check your Gemini API plan.";
+    }
     errorMessage.textContent = msg;
     intakeWrap.classList.add("hidden");
     loadingPanel.classList.add("hidden");

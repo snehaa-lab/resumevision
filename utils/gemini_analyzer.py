@@ -7,11 +7,21 @@ sections, improvement suggestions, and tailored interview questions.
 import json
 import os
 import re
+import time
 
 from google import genai
 from google.genai import types
 
 DEFAULT_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
+
+# Google's free-tier flash models occasionally return 503 ("high demand").
+# Try these in order if the configured model is temporarily unavailable.
+_FALLBACK_MODELS = [
+    "gemini-3.5-flash",
+    "gemini-3.6-flash",
+    "gemini-3.7-flash",
+    "gemini-3.1-flash-lite",
+]
 
 _SYSTEM_INSTRUCTION = """You are an expert technical recruiter and ATS (Applicant \
 Tracking System) specialist. You analyze resumes with the same rigor a Fortune \
@@ -103,6 +113,41 @@ def _get_client():
     return genai.Client(api_key=api_key)
 
 
+def _generate_with_retry(client, prompt):
+    """Generate content, falling back between models on transient capacity errors."""
+    config = types.GenerateContentConfig(
+        system_instruction=_SYSTEM_INSTRUCTION,
+        temperature=0.4,
+        response_mime_type="application/json",
+        response_schema=_RESPONSE_SCHEMA,
+        max_output_tokens=8192,
+    )
+    candidates = [DEFAULT_MODEL] + [m for m in _FALLBACK_MODELS if m != DEFAULT_MODEL]
+    errors = []
+
+    for model in candidates:
+        try:
+            response = client.models.generate_content(
+                model=model, contents=prompt, config=config
+            )
+            if response.text:
+                return response.text
+            errors.append(model + ": empty response")
+        except Exception as exc:
+            msg = str(exc)
+            errors.append(model + ": " + msg[:200])
+            if "API_KEY_INVALID" in msg or "API key not valid" in msg:
+                break  # auth failures won't be fixed by another model
+            if any(code in msg for code in ("503", "429", "UNAVAILABLE", "RESOURCE_EXHAUSTED")):
+                time.sleep(1)  # brief pause, then try the next model
+
+    detail = errors[-1] if errors else "unknown error"
+    raise GeminiAnalysisError(
+        "Gemini API request failed after trying " + ", ".join(candidates) +
+        ". Last error: " + detail
+    )
+
+
 def _strip_code_fences(text: str) -> str:
     """Defensive cleanup in case the model wraps JSON in ``` fences anyway."""
     text = text.strip()
@@ -141,21 +186,7 @@ def analyze_resume(resume_text: str, job_description: str | None = None) -> dict
 
     last_error = None
     for attempt in range(2):
-        try:
-            response = client.models.generate_content(
-                model=DEFAULT_MODEL,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=_SYSTEM_INSTRUCTION,
-                    temperature=0.4,
-                    response_mime_type="application/json",
-                    response_schema=_RESPONSE_SCHEMA,
-                    max_output_tokens=8192,
-                ),
-            )
-            raw_text = response.text
-        except Exception as exc:
-            raise GeminiAnalysisError(f"Gemini API request failed: {exc}") from exc
+        raw_text = _generate_with_retry(client, prompt)
 
         if not raw_text:
             last_error = "Gemini returned an empty response."
