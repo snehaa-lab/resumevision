@@ -12,11 +12,15 @@ import time
 from google import genai
 from google.genai import types
 
-DEFAULT_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
+DEFAULT_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
 
-# Google's free-tier flash models occasionally return 503 ("high demand").
+# Google's free-tier models occasionally return 503 ("high demand") or 429
+# (quota exhausted).
 # Try these in order if the configured model is temporarily unavailable.
 _FALLBACK_MODELS = [
+    "gemini-3.5-flash-lite",
+    "gemma-4-31b-it",
+    "gemma-4-26b-a4b-it",
     "gemini-3.5-flash",
     "gemini-3.6-flash",
     "gemini-3.7-flash",
