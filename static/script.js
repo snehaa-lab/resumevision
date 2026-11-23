@@ -274,8 +274,32 @@
     submitBtn.disabled = true;
 
     try {
-      const res = await fetch("/api/analyze", { method: "POST", body: formData });
-      const data = await res.json();
+      let res;
+      try {
+        res = await fetch("/api/analyze", { method: "POST", body: formData });
+      } catch (err) {
+        showError("Couldn't reach the server. Check your connection and try again.");
+        return;
+      }
+
+      // Render's proxy can return an HTML error page (e.g. while a free
+      // instance is waking up). Parse defensively and explain what happened.
+      const raw = await res.text();
+      let data;
+      try {
+        data = JSON.parse(raw);
+      } catch (err) {
+        if (res.status >= 500) {
+          showError(
+            "The server is temporarily unavailable (HTTP " + res.status + "). " +
+            "On the free plan, Render wakes a sleeping service on the first " +
+            "request — please wait a moment and press Try again."
+          );
+        } else {
+          showError("The server returned an unexpected response (HTTP " + res.status + "). Please try again.");
+        }
+        return;
+      }
 
       if (!res.ok) {
         showError(data.error || "Something went wrong. Please try again.");
@@ -287,7 +311,7 @@
       results.classList.remove("hidden");
       results.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
     } catch (err) {
-      showError("Couldn't reach the server. Check your connection and try again.");
+      showError("Something went wrong. Please try again.");
     } finally {
       stopLoading();
       submitBtn.disabled = !selectedFile;
